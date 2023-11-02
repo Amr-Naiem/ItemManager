@@ -1,0 +1,37 @@
+﻿@model List<ItemManager.Models.Domain.Item>
+
+@{
+}
+
+<h1>Items</h1>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>Serial</th>
+			<th>Invoice Date</th>
+			<th>Customer</th>
+			<th>Total</th>
+			<th> </th>
+			
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model.OrderByDescending(i => i.InvoiceDate))
+		{
+			<tr>
+				<td>@item.Serial</td>
+				<td>@item.InvoiceDate.ToString("MM-dd-yyyy")</td>
+				<td>@item.CustomerName</td>
+				<td>@item.Total</td>
+				<td>
+					<a href="/Item/View?serial=@item.Serial" class="btn btn-success">Edit</a>
+					<form asp-action="Delete" asp-controller="Item" method="post" class="d-inline">
+						<input type="hidden" name="serial" value="@item.Serial" />
+						<button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item?')">Delete</button>
+					</form>
+				</td>	
+			</tr>
+		}
+	</tbody>
+</table>

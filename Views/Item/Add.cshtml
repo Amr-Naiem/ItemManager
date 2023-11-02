@@ -1,0 +1,84 @@
+﻿@model ItemManager.Models.AddItemViewModel
+
+@{
+}
+
+<h1>Add Item</h1>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<form method="post" action="Add" class="mt-5" id="itemForm">
+    <div class="mb-3 row">
+        <div class="col-md-6">
+            <label for="" class="form-label">Customer Name</label>
+            <input type="text" class="form-control" asp-for="CustomerName">
+        </div>
+        <div class="col-md-6">
+            <label for="" class="form-label">Invoice Date</label>
+            <input type="date" class="form-control" asp-for="InvoiceDate">
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Item Code</th>
+                <th>Item Name</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Sub Total</th>
+                <th>Discount Rate</th>
+                <th>Discount Value</th>
+                <th>Tax Type</th>
+                <th>Tax Rate</th>
+                <th>Tax Value</th>
+                <th>Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="number" class="form-control" name="ItemCode"></td>
+                <td><input type="text" class="form-control" name="ItemName"></td>
+                <td><input type="number" class="form-control" name="UnitPrice"></td>
+                <td><input type="number" class="form-control" name="Quantity"></td>
+                <td><input type="number" class="form-control" name="SubTotal" readonly></td>
+                <td><input type="number" class="form-control" name="DiscountRate"></td>
+                <td><input type="number" class="form-control" name="DiscountValue" readonly></td>
+                <td><input type="text" class="form-control" name="TaxType"></td>
+                <td><input type="number" class="form-control" name="TaxRate"></td>
+                <td><input type="number" class="form-control" name="TaxValue" readonly></td>
+                <td><input type="number" class="form-control" name="Total" readonly></td>
+                <td>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-danger" onclick="resetForm()">Reset</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+
+<script>
+    $(document).on('input', '.form-control', function () {
+        var unitPrice = parseInt($('[name="UnitPrice"]').val()) || 0;
+        var quantity = parseInt($('[name="Quantity"]').val()) || 0;
+        var discountRate = parseInt($('[name="DiscountRate"]').val()) || 0;
+        var taxRate = parseInt($('[name="TaxRate"]').val()) || 0;
+
+        // Calculate SubTotal
+        $('[name="SubTotal"]').val(unitPrice * quantity);
+
+        // Calculate DiscountValue
+        $('[name="DiscountValue"]').val(unitPrice * quantity * (discountRate / 100));
+
+        // Calculate TaxValue
+        $('[name="TaxValue"]').val((unitPrice * quantity - (unitPrice * quantity * (discountRate / 100))) * (taxRate / 100));
+
+        // Calculate Total
+        $('[name="Total"]').val((unitPrice * quantity - (unitPrice * quantity * (discountRate / 100))) + ((unitPrice * quantity - (unitPrice * quantity * (discountRate / 100))) * (taxRate / 100)));
+    });
+
+    function resetForm() {
+        $('#itemForm')[0].reset();
+    }
+</script>
